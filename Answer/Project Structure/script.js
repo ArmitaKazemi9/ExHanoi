@@ -42,32 +42,71 @@ function diskCreator(number, className){
 
 // for Move A --> B use this: moves.push([A, B])
 function hanoi(from, via, to, n) {
-    return
+      if (n === 0) return;
+    hanoi(from, to, via, n - 1);
+    moves.push([from, to]);
+    hanoi(via, from, to, n - 1);
 }
 
 function exHanoi_1(start, aux, end, n) {
-    alert("your function is not complete")
-    return
+    hanoi(end, start, aux, 3 * n);
+    hanoi(start, aux, end, n);
+    hanoi(aux, start, end, 5 * n);
 }  
 
 function exHanoi_2(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    function solve(k, src, aux, oddDest, evenDest) {
+        if (k === 0) return;
+        solve(k - 1, src, oddDest, evenDest, aux);
+        const dest = (k % 2 !== 0) ? C : D;
+        moves.push([src, dest]);
+        solve(k - 1, aux, src, oddDest, evenDest);
+    }
+    solve(n, A, B, C, D);
 }
 
 function exhanoi_3(A, B, C, n) {
-    alert("your function is not complete")
-    return
+    hanoi(A, B, C, 2 * n);
+    hanoi(B, A, C, 3 * n);
 }
 
 function exhanoi_4(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    function solveEx4(k, src, dest, aux1, aux2) {
+        if (k === 0) return;
+        if (k === 1) {
+            moves.push([src, dest]);
+            return;
+        }
+        let t = Math.floor(k / 2);
+        solveEx4(t, src, aux1, dest, aux2);
+        solveEx4(k - t, src, dest, aux2, aux1);
+        solveEx4(t, aux1, dest, src, aux2);
+    }
+    solveEx4(n, A, C, B, D);
 }
 
 function exhanoi_5(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    function moveAdjacent(k, src, dest, aux1, aux2) {
+        if (k === 0) return;
+        if (k === 1) {
+            const rodsOrder = ['A', 'B', 'C', 'D'];
+            let i1 = rodsOrder.indexOf(src);
+            let i2 = rodsOrder.indexOf(dest);
+            let step = i1 < i2 ? 1 : -1;
+            let curr = i1;
+            while (curr !== i2) {
+                let next = curr + step;
+                moves.push([rodsOrder[curr], rodsOrder[next]]);
+                curr = next;
+            }
+            return;
+        }
+        let t = Math.floor(k / 2);
+        moveAdjacent(t, src, aux1, dest, aux2);
+        moveAdjacent(k - t, src, dest, aux2, aux1);
+        moveAdjacent(t, aux1, dest, src, aux2);
+    }
+    moveAdjacent(n, A, D, B, C);
 }
 
 function moveDisks(from, to){
